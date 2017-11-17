@@ -19,7 +19,7 @@ for(r in seq_len(nrow(runs_list))) {
   cat(runs_list$Team[r], "\n")
   
   # Analysis loop: step through the various analyses the panel is doing
-  for(a in seq_len(nrow(analyses_list))) {
+  for(a in seq_len(nrow(filter(analyses_list, Run == runs_list$Run[r])))) {
     cat("-------------------------\n")
     cat(analyses_list$Analysis[a], "\n")
     

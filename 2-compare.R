@@ -5,6 +5,8 @@ library(dplyr)
 library(readr)
 library(tidyr)
 library(raster)
+library(ggplot2)
+theme_set(theme_bw())
 
 # General purpose function to extract data from netcdf
 extract_data <- function(rasterstack, varname, lon, lat, midyear, nyears, 
@@ -52,10 +54,11 @@ get_srdb <- function(srdb_file, bgc_folder) {
   cat("Reading", srdb_file, "\n")
   read_csv(srdb_file, col_types = "dcicicccccdddddccddccccccccddcdddddcddcddddididdddddddddddcccccddddddddcddddddcdcddddddddddddddddddddddc") %>% 
     filter(Manipulation == "None", Meas_method %in% c("IRGA", "Gas chromatography"), !is.na(Latitude), !is.na(Longitude), !is.na(Study_midyear)) %>% 
-    dplyr::select(Study_midyear, YearsOfData, Latitude, Longitude, Rs_annual, Rh_annual, Q10_0_10, Q10_5_15, Q10_10_20, Q10_0_20) ->
+    dplyr::select(Ecosystem_type, Study_midyear, YearsOfData, Latitude, Longitude,
+                  Rs_annual, Rh_annual, Q10_0_10, Q10_5_15, Q10_10_20, Q10_0_20) ->
     srdb
   
-  srdb <- srdb[1:50,]
+#  srdb <- srdb[1:50,]
   
   # Annual values - compare to Rs_annual and Rh_annual
   tibble(file = list.files(bgc_folder, pattern = "*.nc", full.names = TRUE)) %>% 
@@ -68,14 +71,21 @@ get_srdb <- function(srdb_file, bgc_folder) {
     cat("Reading", filelist$file[f], "\n")
     
     # For annual files, we compare Rs_annual and Rh_annual
+    # SRDB longitudes are -180 to 180, E3SM appears to be 0 to 180
+    sp <- SpatialPoints(cbind(srdb$Longitude + 180, srdb$Latitude))
+    
     if(filelist$time[f] == "ann.nc") {
-      rs <- extract_data(brick(filelist$file[f], varname = "SR"),  varname = "SR",
-                        lon = srdb$Longitude, lat = srdb$Latitude, 
-                        midyear = srdb$Study_midyear, nyears = srdb$YearsOfData, 
-                        file_startyear = filelist$minyear[f], file_layers = filelist$maxyear[f] - filelist$minyear[f] + 1, months_per_layer = 12)
-
+      br <- brick(filelist$file[f], varname = "SOILC_HR")
+      rh <- raster::extract(br, sp)
+      rh <- apply(rh, 1, mean, na.rm = TRUE)   # compute mean over years
+      
+      # rs <- extract_data(brick(filelist$file[f], varname = "SR"),  varname = "SR",
+      #             lon = srdb$Longitude, lat = srdb$Latitude, 
+      #             midyear = srdb$Study_midyear, nyears = srdb$YearsOfData, 
+      #             file_startyear = filelist$minyear[f], file_layers = filelist$maxyear[f] - filelist$minyear[f] + 1, months_per_layer = 12)
+      
       srdb %>% 
-        mutate(model_rs = rs * 60 * 60 * 24 * 365,
+        mutate(model_hr = rh * 60 * 60 * 24 * 365,
                group = filelist$group[f], forcing = filelist$forcing[f], LUC = filelist$LUC[f]) ->  # convert to gC/m2/yr
         results[[f]]
     }
@@ -87,3 +97,20 @@ get_srdb <- function(srdb_file, bgc_folder) {
 }
 
 x <- get_srdb(srdb_file = "input/srdb/srdb-data.csv", bgc_folder = "input/srdb/")
+
+# 1. Observations versus model for HR
+p <- ggplot(x, aes(Rh_annual, model_hr, color = group)) + 
+  geom_point() + geom_abline() + geom_smooth(method = "lm") + 
+  xlim(c(0, 1500)) + 
+  xlab("Observed HR (gC/m2/yr)") + ylab("Modeled HR (gC/m2/yr)")
+print(p)
+ggsave("srdb-1-hr.png")
+
+m <- lm(model_hr ~ Rh_annual * group, data=x)
+print(summary(m))
+
+# 2. Global distribution of HR versus Hashimoto data?
+
+# 3. Model SR Q10 versus observations
+
+

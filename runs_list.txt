@@ -1,0 +1,4 @@
+# List of BGC intercomparison runs to pull data from
+Team	Run		Forcing	LUC		Directory
+ORNL	Global	GSWP3	None	/global/cscratch1/sd/ricciuto/ORNL_BGC_results/Global_2degree/ELM_RDCTCv1_GSWP3_f19_f19_ICB20TRCNRDCTCBC/nolanduse/
+LBNL	Global	GSWP3	None	/project/projectdirs/acme/qzhu/bgc-istudy/global_exp/GSWP3

@@ -1,0 +1,4 @@
+# List of BGC intercomparison analyses to pull data for
+Analysis	Run		Years_to_use	Vars_to_use
+GOLUM		Global	1996-2004		NPP
+SRDB		Global	1990-2010		SR,SOILC_HR,TSOI_10CM
