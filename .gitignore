@@ -3,5 +3,14 @@
 .RData
 .Ruserdata
 
-# input files
-input/
+# input and output files
+*.nc
+*.pdf
+*.png
+*.xlsx
+*.html
+
+# cache files
+2-srdb_cache/
+2-fluxnet_cache/
+

@@ -1,0 +1,127 @@
+---
+title: "E3SM BGC intercomparison"
+output:
+  pdf_document: default
+  html_document: default
+date: "12/21/2017"
+---
+
+```{r setup, include=FALSE, cache=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## FLUXNET2015
+
+The FLUXNET2015 Tier1 data release (http://fluxnet.fluxdata.org/data/fluxnet2015-dataset/) includes data collected at sites from multiple regional flux networks, and features several improvements to the data quality control protocols and the data processing pipeline. Many studies have compared model and remote sensing results to its data, and/or used these data for upscaling to global gridded products.
+
+We examined three primary metrics of model performance using the FLUXNET2015 data: gross primary production (GPP), net ecosystem exchange (NEE), and latent heat flux (LH). This was performed at both money and annual time scales. The models were run with site-level driving data, using the same PFT parameters as the global runs.
+
+### Summary
+
+* `ECA` outperforms `CTC` for GPP, but this difference is driven by a single FLUXNET site (AU-Tum). Researcher who made measurements at that site suggests not trusting GPP numbers.
+* Annual NEE is not a good metrics: we know FLUXNET towers are frequently off by a lot. (From FLUXNET and ILAMB research.)
+* Models tend to simular forests and savannas reasonably well, although DBF seasonality off (?). Shrublands and wetlands poorly simulated by both models.
+
+```{r, echo=FALSE, out.width="100%"}
+metrics <- readr::read_csv("./fluxnet_metrics.csv", col_types = "ccdddd")
+knitr::kable(metrics, digits = 2)
+knitr::include_graphics("output/fluxnet_metrics.png")
+```
+
+### GPP - annual and monthly
+
+Both models tend to underpredict annual GPP at medium to high values, although `Model1` is closer to the 1:1 line (this is a statistically significant difference between models, driven by a single site; see below).
+
+```{r, echo=FALSE, out.width="100%"}
+knitr::include_graphics("output/fluxnet_gpp_ann.png")
+```
+
+```{r, echo=FALSE, out.width="100%"}
+knitr::include_graphics("output/fluxnet_gpp_ann_time.png")
+```
+
+The models' predictive ability varies wildly by IGBP code (i.e. ecosystem type). They show particular problems with deciduous broadleaf forests (DBF), open shrublands (OSH), and wetlands (WET), and particular strengths in evergreen broadleaf forests (EBF), grasslands (GRA), savannas (SAV), and woody savannas (WSA). Significant divergences between `Model1` and `Model2` are seen for mixed forests (MF), OSH, and WET.
+
+```{r, echo=FALSE, out.width="100%"}
+knitr::include_graphics("output/fluxnet_gpp_ann_igbp.png")
+```
+
+Note from Peter Thornton about the Au-Tum site:
+```
+I've checked this with Dan Ricciuto, and the site parameterization is
+as intended. This is a "problem site" that has come up in other work.
+The site is characterized as temperate evergreen broadleaf forest
+(rather small global distribution). If we change parameterizations to
+match the high GPP at this site, we get GPP which seems too high in
+other parts of the global distribution of the PFT. There is some
+concern from our work in other projects that the FLUXNET 2015 reported
+value of around 3000 gC/m2/yr for GPP at this site is too high. On the
+one hand, the LAI at the site is quite low (~2), which seems
+inconsistent with a GPP that is similar to tropical rainforest values.
+On the other hand, we have it from local experts like Owen Atkins that
+these types of forests have potential to be very productive. The
+attached paper [Keith et al. 2009 AFM] reports GPP closer to 2000 
+gC/m2/yr, but is only for a 2-year period. In short, this is a case 
+where we have gone with parameters that seem to make more sense for 
+the global simulation, at the expense of a likely underestimation of
+GPP at the Au-TUM site.
+```
+
+Note from Bill Riley about US-Syv:
+```
+We looked into this bias yesterday, and as far as I can tell, the
+problem arises because this site is defined as mixed forest (50%
+Needleleaf Evergreen Temperate and 50% Broadleaf Deciduous Temperate
+trees), but in reality, the coverage of Broadleaf Deciduous
+trees—which have higher GPP—may be higher than Needleleaf Evergreen
+trees. But, it's hard to tell from this distance (and I really don't
+know that site personally).
+```
+Note that if Au-TUM is excluded there is no statistical difference between the models for annual or monthly GPP across all sites (cf. Figure F1 above).
+
+The seasonal GPP cycle is generally reasonably well captured. `ECA` does noticeably better than `CTC` at a few sites, and noticeably worse at some others.
+
+```{r, echo=FALSE, out.width="100%"}
+knitr::include_graphics("output/fluxnet_gpp_mon_time.png")
+```
+
+### NEE - annual and monthly
+
+The models both have trouble with NEE, particularly sites with strong annual carbon sinks:
+
+```{r, echo=FALSE, out.width="100%"}
+knitr::include_graphics("output/fluxnet_nee_ann.png")
+```
+
+FLUXNET annual NEE is known to be off considerably, however, because of CO2 advection and storage term uncertainties, so it's difficult to give this too much weight.
+
+Interestingly, the same AU-Tum site that gave `CTC` trouble for GPP is poorly simulated by `ECA` for NEE:
+
+```{r, echo=FALSE, out.width="100%"}
+knitr::include_graphics("output/fluxnet_nee_mon_time.png")
+```
+
+Monthly NEE values provide more detail:
+
+```{r, echo=FALSE, out.width="100%"}
+knitr::include_graphics("output/fluxnet_nee_mon_site.png")
+```
+
+NEE performance varies by month of the year:
+
+```{r, echo=FALSE, out.width="100%"}
+knitr::include_graphics("output/fluxnet_nee_mon_month.png")
+```
+
+### LH - annual and monthly
+
+The models do a pretty good job with latent heat flux:
+
+```{r, echo=FALSE, out.width="100%"}
+knitr::include_graphics("output/fluxnet_lh_ann.png")
+```
+
+```{r, echo=FALSE, out.width="100%"}
+knitr::include_graphics("output/fluxnet_lh_ann_igbp.png")
+```
+

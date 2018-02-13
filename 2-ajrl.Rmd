@@ -1,0 +1,61 @@
+---
+title: "Supplementary analyses"
+date: "12/21/2017"
+output: pdf_document
+---
+
+## From Atul:
+
+(1) First sticking point of two models is the nutrient relative demand (RD) approach (i.e., ORNL  approach) and trait-based Equilibrium Chemistry Approximation (ECA) approach.  Zhu et al claim that  RD model predicted topsoil plant 15N uptake is very small due to large microbial nutrient demand (i.e., little “left-over” nutrient for plants). In contrast, because of lower microbial nutrient uptake at depth, there are more “left-over” nutrients and plant 15N uptake is relatively higher, although root biomass density decreases with depth. Peter argued in his write-up that Zhu et al. claim is not correct and felt that Zue et al. calculations for RD case were not correct.  Since we don't have the 15N results, would it be possible to plot side by side gridded plot for root density and root N amount for grasslands at 10 cm and 30 cm (or two different depths for which the data is available). It would tell us how the two models are treating a N uptake as a function of root density
+
+```{r, echo=FALSE, out.width="100%"}
+knitr::include_graphics("output/fluxnet_rd.png")
+```
+
+(2) Second issues is related to dynamic versus static carbon allocation. LBNL is strongly advocating as their new science, I feel it is important to take a look at how the two models are treating C allocation. So, it will be good to look at carbon amount in different pools. Can you plot gridded values for leaf, stem, root, CWD, FWD and litter carbon pools for two models. This will give us some sense  as to how the two models are handling carbon allocations.
+
+```{r, echo=FALSE, out.width="100%"}
+knitr::include_graphics("output/LEAFC_ALLOC in AJRL-SS_LBNL_Global_GSWP3_LUC_18.png")
+knitr::include_graphics("output/LEAFC_ALLOC in AJRL-SS_ORNL_Global_GSWP3_NoLUC_.png")
+knitr::include_graphics("output/WOODC_ALLOC in AJRL-SS_LBNL_Global_GSWP3_LUC_18.png")
+knitr::include_graphics("output/WOODC_ALLOC in AJRL-SS_ORNL_Global_GSWP3_NoLUC_.png")
+knitr::include_graphics("output/wood_to_leaf_alloc in AJRL-SS_LBNL_Global_GSWP3_LUC_18.png")
+knitr::include_graphics("output/wood_to_leaf_alloc in AJRL-SS_ORNL_Global_GSWP3_LUC_18.png")
+```
+
+(3) Third, I would like to see  two model performance at the steady state. So, it would be good to plot global total NPP with time starting 1850 or 1860 (whatever the starting point for two models is) (just X (year) and Y (NEE) plot will be fine).
+
+```{r, echo=FALSE, out.width="100%"}
+knitr::include_graphics("output/ajrl-2-fluxes.png")
+knitr::include_graphics("output/ajrl-2-nee.png")
+```
+
+(4) Fourth, ORNL model strength is in their P cycle. I think it will be good to compare two model results for P amount in the vegetation and soil pools (gridded plots will be fine) and for C uptake (plants and soils) for with and without P dynamics cases (if the results are available).
+
+```{r, echo=FALSE, out.width="100%"}
+knitr::include_graphics("input/ajrl-np/STORVEGP in AJRL-NP_LBNL_Global_GSWP3_LUC_20.png")
+knitr::include_graphics("input/ajrl-np/STORVEGP in AJRL-NP_ORNL_Global_GSWP3_LUC_20.png")
+knitr::include_graphics("input/ajrl-np/TOTSOMP in AJRL-NP_LBNL_Global_GSWP3_LUC_20.png")
+knitr::include_graphics("input/ajrl-np/TOTSOMP in AJRL-NP_ORNL_Global_GSWP3_LUC_20.png")
+```
+
+# From Ying-Ping:
+
+Look at NEE with LUC - NEE without LUC.
+
+```{r, echo=FALSE, out.width="100%"}
+knitr::include_graphics("output/ajrl-2-nee-luc.png")
+```
+
+## From Ruby:
+
+I also wonder if we should look into something like Yingping’s 2010 Biogeosciences paper that shows the global distribution of N/P limitation to see what regions are P or N limited. This may be something that tells us a key difference between the two approaches of nutrient limitation.
+
+The problem here is that the `FPG` and `FPG_P` output variables are meaningful for the `CTC` model, but not `ECA`. (I have a question out to Bill about this, as I'm not sure what the spatial patterns of `FPG` and `FPG_P` _mean_ for `ECA`.)
+
+```{r, echo=FALSE, out.width="100%"}
+knitr::include_graphics("input/ajrl-np/FPG in AJRL-NP_LBNL_Global_GSWP3_LUC_20.png")
+knitr::include_graphics("input/ajrl-np/FPG in AJRL-NP_ORNL_Global_GSWP3_LUC_20.png")
+knitr::include_graphics("input/ajrl-np/FPG_P in AJRL-NP_LBNL_Global_GSWP3_LUC_20.png")
+knitr::include_graphics("input/ajrl-np/FPG_P in AJRL-NP_ORNL_Global_GSWP3_LUC_20.png")
+```

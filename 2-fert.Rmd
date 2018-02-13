@@ -1,0 +1,41 @@
+---
+title: "NP Fertilization"
+date: "12/21/2017"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## NP Fertilization
+
+Because the fundamental differences between `ECA` and `CTC` center around their treatment of soil biogeochemistry and the competition between plants and microbes for N and P, the teams agreed to do a set of site-specific runs and compare the models to published data from fertilization experiments. This dataset was assembled by the LBNL team and comprised 100 sites/experiments.
+
+The ORNL team raised both _a priori_ and _a posteriori_ concerns about this observational dataset. Their spot checking found inconsistencies and problems (e.g. PFT assignments), which were confirmed by the panel. As a result we have elected not to calculate site-specific or overall statistics (e.g. R2, RSE, bias) for these simulations but instead evaluate them more qualitatively, looking at whether the model responses broadly accord with fertilization experiment responses. 
+
+## Net primary production
+
+Both models exhibit increased NPP in response to fertilization (absolute values on top, percentage changes on bottom). The `ECA` responses are both larger and more variable. **TODO: separate N and P?**
+
+```{r, echo=FALSE, out.width="100%"}
+knitr::include_graphics("output/fert-npp.png")
+knitr::include_graphics("output/fert-npp_percent.png")
+```
+
+# Nutrients in vegetation
+
+Nutrient stocks (N top, P bottom) in vegetation.
+
+```{r, echo=FALSE, out.width="100%"}
+knitr::include_graphics("output/fert-totvegn.png")
+knitr::include_graphics("output/fert-totvegp.png")
+```
+
+# Hawaii sites
+
+This well-studied group of sites constitutes about half of the P fertilization dataset.
+
+```{r, echo=FALSE, out.width="100%"}
+knitr::include_graphics("output/fert-hawaii.png")
+```

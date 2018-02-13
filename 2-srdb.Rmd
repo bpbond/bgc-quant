@@ -1,0 +1,64 @@
+---
+title: "E3SM BGC intercomparison"
+output:
+  pdf_document: default
+  html_document: default
+date: "12/21/2017"
+---
+
+```{r setup, include=FALSE, cache=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## SRDB
+
+The global soil respiration database (SRDB) is a global database introduced by Bond-Lamberty and Thomson (2010) that tracks published soil respiration data at the season to annual timescale. Its data have been widely used and as it comprises direct observations of integrated soil surface fluxes, it provides a good test for the models in natural (non-manipulated) conditions. We examined four metrics of model performance using SRDB.
+
+## Summary
+
+* Neither model predicts directly observed RH very well (not surprising given the scale mismatch between collars and ESM grid cells)
+* The global RH distribution of `CTC` matches the gridded Hashimoto et al. (2015) products distribution a bit better than does `ECA`
+* Both models appear highly restricted in the month-to-month Q10 they exhibit
+* `CTC` matches global RH flux a bit better
+
+## Details
+
+**First, how well soil heterotrophic respiration (HR) matched between the model outputs and specific observations in the SRDB.** There is an obvious scaling problem here (the former is at the grid cell level, the latter at the collar scale) but that affects both groups' models equally.
+
+```{r, echo=FALSE, out.width="100%"}
+knitr::include_graphics("output/srdb-1-hr.png")
+```
+
+The models performed essentially identically in the LUC cases (LBNL did not run the no-LUC cases). There is no statistical difference (P = 0.13) between the regression lines shown.
+
+**Second, how well the models replicated the data product of Hashimoto et al. (2015)**. This product is a statistical model based on SRDB data upscaled to a global grid and driven by reanalysis climate data.
+
+```{r, echo=FALSE, out.width="100%"}
+knitr::include_graphics("output/srdb-2-hr.png")
+```
+
+Here models diverged a bit. Neither matched the observed distribution of global HR, but `Model2` did not exhibit as extreme a bias towards low-HR values.
+
+**Third, how well the models' Q10 (total soil surface respiration response to temperature changes) matched observed data from the SRDB.** The models don't match observations _at all_, being constrained to a very narrow range (around a Q10 of 1.4) whereas observations exhibit a lognormal distribution peaking around 2.5.
+
+```{r, echo=FALSE, out.width="100%"}
+knitr::include_graphics("output/srdb-3-q10.png")
+```
+
+**Fourth, how well do the models global RH flux match that of Hashimoto et al. (2015)?** Both models' RH (here taken as soil RH + litter RH) are significantly below this observation-driven statistical upscaling data product. The global flux of `Model2` is consistently ~10% higher than that of `Model1`.
+
+```{r, echo=FALSE, out.width="100%"}
+knitr::include_graphics("output/srdb-4-global-time.png")
+```
+
+Note from Peter Thornton re why LUC runs have _lower_ RH:
+```
+I would expect this behavior, since carbon is being removed from the
+plant+litter+soil system under LUC and put into the wood product
+pools, where it is assumed to "decompose" back to the atmosphere off
+site (variable name is PRODUCT_CLOSS). Without LUC, that carbon stays
+on site and goes through the coarse woody debris, litter, and soil
+organic matter pools during decomposition. So I would expect that with
+LUC the litter and soil C pools are lower, with lower fluxes out of
+those pools, than without LUC.
+```
